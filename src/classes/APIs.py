@@ -96,4 +96,3 @@ class SuperJobAPI(API):
                                 params={"keyword": keyword,
                                         "count": 100})
         return response.json()
-
