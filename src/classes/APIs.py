@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 import requests
+import os
 
 
 class API(ABC):
@@ -14,6 +15,7 @@ class API(ABC):
         :return: список вакансий
         """
         pass
+
 
 class HeadHunterAPI(API):
     """
@@ -60,13 +62,15 @@ class SuperJobAPI(API):
     """
     Класс для работы с API SuperJob
     """
+
+    API_KEY = os.getenv('SJ_SECRET_KEY')
+
     def __init__(self) -> None:
         """
         Инициализация класса
         """
         self._url = "https://api.superjob.ru/2.0/vacancies/"
-        self._headers = {"X-Api-App-Id": "v3.r.137598076.b9969aa163487aecc9928f7cf2c0d2f4d769da7e"
-                                         ".568b25124c152bd563719ca9e46a3c422787c869"}
+        self._headers = {"X-Api-App-Id": self.API_KEY}
 
 
     def __repr__(self) -> str:
