@@ -26,7 +26,6 @@ class HeadHunterAPI(API):
         Инициализация класса
         """
         self._url = "https://api.hh.ru/vacancies/"
-        self._headers = {"User-Agent": "HH-User-Agent"}
 
 
     def __repr__(self) -> str:
@@ -52,7 +51,6 @@ class HeadHunterAPI(API):
         :return: список вакансий
         """
         response = requests.get(f"{self._url}",
-                                headers=self._headers,
                                 params={"text": keyword,
                                         "per_page": 100})
         return response.json()
