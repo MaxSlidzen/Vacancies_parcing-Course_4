@@ -7,11 +7,11 @@ class API(ABC):
     """
     Абстрактный класс для работы с API
     """
+
     @abstractmethod
-    def get_vacancies(self, keyword: str) -> dict:
+    def get_vacancies(self) -> list:
         """
-        Возвращает список вакансий по заданному ключу
-        :param keyword: ключ для поиска
+        Возвращает список вакансий
         :return: список вакансий
         """
         pass
@@ -21,12 +21,14 @@ class HeadHunterAPI(API):
     """
     Класс для работы с API HeadHunter
     """
-    def __init__(self) -> None:
-        """
-        Инициализация класса
-        """
-        self._url = "https://api.hh.ru/vacancies/"
 
+    def __init__(self, keyword) -> None:
+        """
+        Инициализация класса по заданному ключу
+        :param keyword: ключ для поиска вакансий HeadHunter
+        """
+        self.__url = "https://api.hh.ru/vacancies/"
+        self.__params = {"text": keyword, "per_page": 100}
 
     def __repr__(self) -> str:
         """
@@ -35,7 +37,6 @@ class HeadHunterAPI(API):
         """
         return f"{self.__class__.__name__}()"
 
-
     def __str__(self) -> str:
         """
         Возвращает строковое представление класса для пользователя
@@ -43,16 +44,13 @@ class HeadHunterAPI(API):
         """
         return "HeadHunter API"
 
-
-    def get_vacancies(self, keyword: str) -> dict:
+    def get_vacancies(self) -> list:
         """
         Возвращает список вакансий по заданному ключу
-        :param keyword: ключ для поиска
         :return: список вакансий
         """
-        response = requests.get(f"{self._url}",
-                                params={"text": keyword,
-                                        "per_page": 100})
+        response = requests.get(f"{self.__url}",
+                                params=self.__params)
         return response.json()
 
 
@@ -63,13 +61,14 @@ class SuperJobAPI(API):
 
     API_KEY = os.getenv('SJ_SECRET_KEY')
 
-    def __init__(self) -> None:
+    def __init__(self, keyword: str) -> None:
         """
-        Инициализация класса
+        Инициализация класса по заданному ключу
+        :param keyword: Ключ для поиска вакансий SuperJob
         """
-        self._url = "https://api.superjob.ru/2.0/vacancies/"
-        self._headers = {"X-Api-App-Id": self.API_KEY}
-
+        self.__url = "https://api.superjob.ru/2.0/vacancies/"
+        self.__headers = {"X-Api-App-Id": self.API_KEY}
+        self.__params = {"keyword": keyword, "count": 100}
 
     def __repr__(self) -> str:
         """
@@ -78,7 +77,6 @@ class SuperJobAPI(API):
         """
         return f"{self.__class__.__name__}()"
 
-
     def __str__(self) -> str:
         """
         Возвращает строковое представление класса для пользователя
@@ -86,15 +84,12 @@ class SuperJobAPI(API):
         """
         return "SuperJob API"
 
-
-    def get_vacancies(self, keyword: str) -> dict:
+    def get_vacancies(self) -> list:
         """
         Возвращает список вакансий по заданному ключу
-        :param keyword: ключ для поиска
         :return: список вакансий
         """
-        response = requests.get(f"{self._url}",
-                                headers=self._headers,
-                                params={"keyword": keyword,
-                                        "count": 100})
+        response = requests.get(f"{self.__url}",
+                                headers=self.__headers,
+                                params=self.__params)
         return response.json()
