@@ -66,7 +66,7 @@ class JSONSaver(Saver):
             data.append(vacancy_dict)
             json.dump(data, f, indent=4, ensure_ascii=False)
 
-    def get_vacancies(self, keyword=None):
+    def get_vacancies(self, keyword=""):
         """
         Получение вакансий из файла
         :param keyword: ключевое слово для поиска вакансий
@@ -75,7 +75,7 @@ class JSONSaver(Saver):
         # В случае отсутствия ключа возвращается исходный список
         with open(self.path, 'r', encoding="utf-8") as f:
             data = json.load(f)
-            if keyword is None:
+            if keyword == "":
                 return data
 
             result = []
@@ -85,11 +85,10 @@ class JSONSaver(Saver):
                     continue
                 if keyword in vacancy.values():
                     result.append(vacancy)
-            if len(result) == 0:
-                print("По данному ключу вакансий не найдено. Уточните ключевое слово.")
+
         return result
 
-    def delete(self, chosen_vacancies, keyword=None):
+    def delete(self, chosen_vacancies, keyword=""):
         """
         Удаление вакансий, содержащих в значениях ключ, из файла
         :param chosen_vacancies: список выбранных вакансий
@@ -97,7 +96,7 @@ class JSONSaver(Saver):
         :return: список данных вакансий
         """
         # В случае отсутствия ключа возвращается исходный список
-        if keyword is None:
+        if keyword == "":
             return chosen_vacancies
 
         data = chosen_vacancies.copy()
@@ -119,5 +118,6 @@ class JSONSaver(Saver):
         """
         Удаление временных данных
         """
-        os.remove(self.path)
-        os.rmdir(os.path.dirname(self.path))
+        if os.path.exists(self.path):
+            os.remove(self.path)
+            os.rmdir(os.path.dirname(self.path))

@@ -44,7 +44,7 @@ class HeadHunterAPI(API):
         """
         return "HeadHunter API"
 
-    def get_vacancies(self) -> list:
+    def get_vacancies(self) -> dict:
         """
         Возвращает список вакансий по заданному ключу
         :return: список вакансий
@@ -84,7 +84,7 @@ class SuperJobAPI(API):
         """
         return "SuperJob API"
 
-    def get_vacancies(self) -> list:
+    def get_vacancies(self) -> dict:
         """
         Возвращает список вакансий по заданному ключу
         :return: список вакансий
