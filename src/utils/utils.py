@@ -35,7 +35,6 @@ def get_hh_salary(raw_vacancy: dict) -> int:
     return raw_vacancy["salary"]["from"]
 
 
-
 def get_sj_salary(raw_vacancy: dict) -> int:
     """
     Возвращает величину зарплаты для вакансий SJ
@@ -104,3 +103,15 @@ def get_filtered_vacancies(vacancies: list) -> list:
     for vacancy in vacancies:
         filtered_vacancies.append(Vacancy(*vacancy.values()))
     return filtered_vacancies
+
+
+def print_per_page(key, job_list):
+    if not key.isdigit():
+        per_page = len(job_list)
+    elif int(key) > len(job_list):
+        per_page = len(job_list)
+    else:
+        per_page = int(key)
+
+    for i in range(per_page):
+        print(job_list[i])
