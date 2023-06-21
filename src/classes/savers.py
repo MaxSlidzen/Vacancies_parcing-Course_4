@@ -31,13 +31,13 @@ class JSONSaver(Saver):
         Конструктор класса
         :param path: путь к файлу
         """
-        self.path = path
+        self.__path = path
 
         # Создание пути к файлу в случае его отсутствия
-        if not os.path.exists(os.path.dirname(self.path)):
-            os.mkdir(os.path.dirname(self.path))
-        if not os.path.exists(self.path):
-            with open(self.path, 'w') as f:
+        if not os.path.exists(os.path.dirname(self.__path)):
+            os.mkdir(os.path.dirname(self.__path))
+        if not os.path.exists(self.__path):
+            with open(self.__path, 'w') as f:
                 f.write(json.dumps([]))
 
     def insert(self, params: list):
@@ -62,7 +62,7 @@ class JSONSaver(Saver):
         data = self.get_vacancies()
 
         # Добавление вакансии в файл
-        with open(self.path, 'w', encoding="utf-8") as f:
+        with open(self.__path, 'w', encoding="utf-8") as f:
             data.append(vacancy_dict)
             json.dump(data, f, indent=4, ensure_ascii=False)
 
@@ -73,7 +73,7 @@ class JSONSaver(Saver):
         :return: список данных вакансий
         """
         # В случае отсутствия ключа возвращается исходный список
-        with open(self.path, 'r', encoding="utf-8") as f:
+        with open(self.__path, 'r', encoding="utf-8") as f:
             data = json.load(f)
             if keyword == "":
                 return data
@@ -88,7 +88,8 @@ class JSONSaver(Saver):
 
         return result
 
-    def delete(self, chosen_vacancies, keyword=""):
+    @staticmethod
+    def delete(chosen_vacancies, keyword=""):
         """
         Удаление вакансий, содержащих в значениях ключ, из файла
         :param chosen_vacancies: список выбранных вакансий
@@ -117,13 +118,13 @@ class JSONSaver(Saver):
         """
         Очистка файла
         """
-        with open(self.path, 'w') as f:
+        with open(self.__path, 'w') as f:
             f.write(json.dumps([]))
 
     def clear_data(self):
         """
         Удаление временных данных
         """
-        if os.path.exists(self.path):
-            os.remove(self.path)
-            os.rmdir(os.path.dirname(self.path))
+        if os.path.exists(self.__path):
+            os.remove(self.__path)
+            os.rmdir(os.path.dirname(self.__path))
