@@ -99,6 +99,11 @@ def get_sj_vacancies_params(raw_vacancy: dict) -> list:
 
 
 def get_filtered_vacancies(vacancies: list) -> list:
+    """
+    Получение списка экземпляров отфильтрованных вакансий
+    :param vacancies: Список с отфильтрованными данными вакансии
+    :return: Список экземпляров отфильтрованных вакансий
+    """
     filtered_vacancies = []
     for vacancy in vacancies:
         filtered_vacancies.append(Vacancy(*vacancy.values()))
@@ -106,6 +111,11 @@ def get_filtered_vacancies(vacancies: list) -> list:
 
 
 def print_per_page(key, job_list):
+    """
+    Вывод вакансий на страницу
+    :param key: Ключ вакансии
+    :param job_list: Список вакансий
+    """
     if not key.isdigit():
         per_page = len(job_list)
     elif int(key) > len(job_list):
