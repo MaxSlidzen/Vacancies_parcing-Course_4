@@ -102,7 +102,7 @@ class JSONSaver(Saver):
         data = chosen_vacancies.copy()
         for vacancy in chosen_vacancies:
             for value in vacancy.values():
-                if isinstance(keyword, str) and isinstance(value, str):
+                if isinstance(value, str):
                     if keyword in value:
                         data.remove(vacancy)
                         break
@@ -111,8 +111,14 @@ class JSONSaver(Saver):
                 else:
                     continue
 
-
         return data
+
+    def clear_file(self):
+        """
+        Очистка файла
+        """
+        with open(self.path, 'w') as f:
+            f.write(json.dumps([]))
 
     def clear_data(self):
         """
