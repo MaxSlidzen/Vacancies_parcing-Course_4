@@ -2,6 +2,8 @@ class Vacancy:
     """
     Класс для работы с вакансиями
     """
+    __slots__ = ['__vacancy_name', '__salary', '__currency', '__description', '__url', '__location',
+                 '__published', '__experience', '__employment']
 
     def __init__(self, vacancy_name: str, salary: int, currency: str, description: str, url: str, location: str,
                  published: str, experience: str, employment: str) -> None:
@@ -43,9 +45,7 @@ class Vacancy:
         Возвращает строковое представление класса для разработчика
         :return: строковое представление класса
         """
-        return f"{self.__class__.__name__}.(vacancy_name={self.vacancy_name}, salary={self.salary}, " \
-               f"description={self.description}, url={self.url}, location={self.location}, " \
-               f"published={self.published}, experience={self.experience}, employment={self.employment}"
+        return f"{self.__class__.__name__}.({self.__slots__})"
 
     def __gt__(self, other: 'Vacancy') -> bool:
         """
@@ -62,3 +62,101 @@ class Vacancy:
         :return: True, если вакансия меньше другой
         """
         return self.salary < other.salary
+
+    # Валидация данных инициализации
+    @property
+    def vacancy_name(self) -> str:
+        return self.__vacancy_name
+
+    @vacancy_name.setter
+    def vacancy_name(self, value) -> None:
+        if isinstance(value, str):
+            self.__vacancy_name = value
+
+    ###
+
+    @property
+    def salary(self) -> int:
+        return self.__salary
+
+    @salary.setter
+    def salary(self, value) -> None:
+        if isinstance(value, int):
+            self.__salary = value
+
+    ###
+
+    @property
+    def currency(self) -> str:
+        return self.__currency
+
+    @currency.setter
+    def currency(self, value) -> None:
+        if isinstance(value, str) and (len(value) == 3 or len(value) == 0):
+            self.__currency = value
+
+    ###
+
+    @property
+    def description(self) -> str:
+        return self.__description
+
+    @description.setter
+    def description(self, value) -> None:
+        if isinstance(value, str):
+            self.__description = value
+
+    ###
+
+    @property
+    def url(self) -> str:
+        return self.__url
+
+    @url.setter
+    def url(self, value) -> None:
+        if isinstance(value, str) and 'http' in value:
+            self.__url = value
+
+    ###
+
+    @property
+    def location(self) -> str:
+        return self.__location
+
+    @location.setter
+    def location(self, value) -> None:
+        if isinstance(value, str):
+            self.__location = value
+
+    ###
+
+    @property
+    def published(self) -> str:
+        return self.__published
+
+    @published.setter
+    def published(self, value) -> None:
+        if isinstance(value, str) and len(value) == 10:
+            self.__published = value
+
+    ###
+
+    @property
+    def experience(self) -> str:
+        return self.__experience
+
+    @experience.setter
+    def experience(self, value) -> None:
+        if isinstance(value, str):
+            self.__experience = value
+
+    ###
+
+    @property
+    def employment(self) -> str:
+        return self.__employment
+
+    @employment.setter
+    def employment(self, value) -> None:
+        if isinstance(value, str):
+            self.__employment = value
