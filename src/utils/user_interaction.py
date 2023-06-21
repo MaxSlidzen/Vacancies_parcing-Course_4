@@ -21,21 +21,44 @@ def get_query(saver) -> None:
 
         # Получаем параметры вакансий с сайтов
         raw_hh_vacancies = hh_api.get_vacancies()["items"]
-        raw_sj_vacancies = sj_api.get_vacancies()["objects"]
 
-        # Проверяем наличие вакансий согласно запросу. В случае их отсутствия переходим в начало цикла
-        if len(raw_hh_vacancies) == 0 and len(raw_sj_vacancies) == 0:
-            print("Ничего не найдено.\n")
-            continue
+        # Обработка исключения при некорректном API_KEY SuperJob
+        try:
+            raw_sj_vacancies = sj_api.get_vacancies()["objects"]
 
-        # Форматируем данные вакансий и сохраняем в файл
-        for raw_vacancy in raw_hh_vacancies:
-            vacancy = get_hh_vacancies_params(raw_vacancy)
-            saver.insert(vacancy)
+        except KeyError:
+            print("\nНеправильно определен API_KEY для работы с SuperJob")
 
-        for raw_vacancy in raw_sj_vacancies:
-            vacancy = get_sj_vacancies_params(raw_vacancy)
-            saver.insert(vacancy)
+            # Условие продолжения работы только с HeadHunter
+            user_input = input("Продолжить работу только с HeadHunter? (y): ")
+
+            if user_input != "y" or user_input == "exit":
+                return
+            else:
+                # Проверяем наличие вакансий согласно запросу. В случае их отсутствия переходим в начало цикла
+                if len(raw_hh_vacancies) == 0:
+                    print("Ничего не найдено.\n")
+                    continue
+
+                # Форматируем данные вакансий и сохраняем в файл
+                for raw_vacancy in raw_hh_vacancies:
+                    vacancy = get_hh_vacancies_params(raw_vacancy)
+                    saver.insert(vacancy)
+        # Выполнение кода, если исключение не вызвалось
+        else:
+            # Проверяем наличие вакансий согласно запросу. В случае их отсутствия переходим в начало цикла
+            if len(raw_hh_vacancies) == 0 and len(raw_sj_vacancies) == 0:
+                print("Ничего не найдено.\n")
+                continue
+
+            # Форматируем данные вакансий и сохраняем в файл
+            for raw_vacancy in raw_hh_vacancies:
+                vacancy = get_hh_vacancies_params(raw_vacancy)
+                saver.insert(vacancy)
+
+            for raw_vacancy in raw_sj_vacancies:
+                vacancy = get_sj_vacancies_params(raw_vacancy)
+                saver.insert(vacancy)
 
         # Выходим из цикла и запускаем следующую функцию
         break
