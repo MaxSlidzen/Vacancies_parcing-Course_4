@@ -1,10 +1,11 @@
 from src.classes.APIs import HeadHunterAPI, SuperJobAPI
-from src.utils.utils import get_sj_vacancies_params, get_hh_vacancies_params, get_filtered_vacancies, print_per_page
+from src.utils.utils import insert_hh_vacancies, insert_sj_vacancies, get_filtered_vacancies, print_per_page
 
 
 def get_query(saver) -> None:
     """
     Основная функция для взаимодействия с пользователем
+
     :param saver: Класс для работы с данными вакансий в файле
     :return: При выходе из программы функция завершается без вывода. Иначе - вызывает следующую функцию
     """
@@ -19,13 +20,13 @@ def get_query(saver) -> None:
         hh_api = HeadHunterAPI(query)
         sj_api = SuperJobAPI(query)
 
-        # Получаем параметры вакансий с сайтов
-        raw_hh_vacancies = hh_api.get_vacancies()["items"]
+        # Добавляем вакансии hh в файл
+        insert_hh_vacancies(hh_api, saver)
 
         # Обработка исключения при некорректном API_KEY SuperJob
         try:
-            raw_sj_vacancies = sj_api.get_vacancies()["objects"]
-
+            # Добавляем вакансии sj в файл
+            insert_sj_vacancies(sj_api, saver)
         except KeyError:
             print("\nНеправильно определен API_KEY для работы с SuperJob")
 
@@ -34,32 +35,11 @@ def get_query(saver) -> None:
 
             if user_input != "y" or user_input == "exit":
                 return
-            else:
-                # Проверяем наличие вакансий согласно запросу. В случае их отсутствия переходим в начало цикла
-                if len(raw_hh_vacancies) == 0:
-                    print("Ничего не найдено.\n")
-                    continue
 
-                # Форматируем данные вакансий и сохраняем в файл
-                for raw_vacancy in raw_hh_vacancies:
-                    vacancy = get_hh_vacancies_params(raw_vacancy)
-                    saver.insert(vacancy)
-        # Выполнение кода, если исключение не вызвалось
-        else:
-            # Проверяем наличие вакансий согласно запросу. В случае их отсутствия переходим в начало цикла
-            if len(raw_hh_vacancies) == 0 and len(raw_sj_vacancies) == 0:
-                print("Ничего не найдено.\n")
-                continue
-
-            # Форматируем данные вакансий и сохраняем в файл
-            for raw_vacancy in raw_hh_vacancies:
-                vacancy = get_hh_vacancies_params(raw_vacancy)
-                saver.insert(vacancy)
-
-            for raw_vacancy in raw_sj_vacancies:
-                vacancy = get_sj_vacancies_params(raw_vacancy)
-                saver.insert(vacancy)
-
+        # Проверяем наличие вакансий согласно запросу. В случае их отсутствия переходим в начало цикла
+        if len(saver.get_vacancies()) == 0:
+            print("Ничего не найдено.\n")
+            continue
         # Выходим из цикла и запускаем следующую функцию
         break
     return to_seek_n_hide(saver)
@@ -68,6 +48,7 @@ def get_query(saver) -> None:
 def to_seek_n_hide(saver) -> None:
     """
     Функция для выборки вакансий из файла по ключевым словам
+
     :param saver: Класс для работы с данными вакансий в файле
     :return: При выходе из программы функция завершается без вывода. Иначе - вызывает следующую функцию
     """
@@ -105,6 +86,7 @@ def to_seek_n_hide(saver) -> None:
 def to_print_vacancies(vacancies: list, saver) -> None:
     """
     Функция для вывода вакансий пользователю
+
     :param vacancies: Список экземпляров вакансий
     :param saver: Класс для работы с данными вакансий в файле
     :return: При выходе из программы функция завершается без вывода. Иначе - вызывает следующую функцию
@@ -133,11 +115,12 @@ def to_print_vacancies(vacancies: list, saver) -> None:
 def is_continue(saver) -> None:
     """
     Функция для продолжения работы программы
+
     :param saver: Класс для работы с данными вакансий в файле
     :return: Завершение цепочки функций, либо возврат к началу запроса/фильтру вакансий
     (в зависимости от команды пользователя)
     """
-    continue_key = input("Ввеедите 'n', чтобы завершить программу. \n"
+    continue_key = input("Введите 'n', чтобы завершить программу. \n"
                          "Любой другой ввод продолжит работу программы.\n")
 
     if continue_key == "n" or continue_key == "exit":

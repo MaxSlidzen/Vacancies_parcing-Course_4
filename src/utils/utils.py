@@ -5,6 +5,7 @@ from src.classes.vacancies import Vacancy
 def get_date_from_unix_time(unix_time: int):
     """
     Форматирование времени из формата unix time
+
     :param unix_time: время в формате unix time
     :return: дата в формате гггг-мм-дд
     """
@@ -15,6 +16,7 @@ def get_date_from_unix_time(unix_time: int):
 def to_strip_date(date_str: str):
     """
     Возвращает дату публикации без указания времени
+
     :param date_str:
     :return: дата в формате гггг-мм-дд
     """
@@ -25,6 +27,7 @@ def to_strip_date(date_str: str):
 def get_hh_salary(raw_vacancy: dict) -> int:
     """
     Возвращает величину зарплаты для вакансий HH
+
     :param raw_vacancy: "сырой" словарь с данными о вакансии HH
     :return: величина зарплаты
     """
@@ -38,6 +41,7 @@ def get_hh_salary(raw_vacancy: dict) -> int:
 def get_sj_salary(raw_vacancy: dict) -> int:
     """
     Возвращает величину зарплаты для вакансий SJ
+
     :param raw_vacancy: "сырой" словарь с данными о вакансии SJ
     :return: величина зарплаты
     """
@@ -51,6 +55,7 @@ def get_sj_salary(raw_vacancy: dict) -> int:
 def get_hh_vacancies_params(raw_vacancy: dict) -> list:
     """
     Возвращает параметры для вакансий HH
+
     :param raw_vacancy: "сырой" словарь с данными о вакансии HH
     :return: параметры для вакансий HH
     """
@@ -77,6 +82,7 @@ def get_hh_vacancies_params(raw_vacancy: dict) -> list:
 def get_sj_vacancies_params(raw_vacancy: dict) -> list:
     """
     Возвращает параметры для вакансий SJ
+
     :param raw_vacancy: "сырой" словарь с данными о вакансии SJ
     :return: параметры для вакансий SJ
     """
@@ -101,6 +107,7 @@ def get_sj_vacancies_params(raw_vacancy: dict) -> list:
 def get_filtered_vacancies(vacancies: list) -> list:
     """
     Получение списка экземпляров отфильтрованных вакансий
+
     :param vacancies: Список с отфильтрованными данными вакансии
     :return: Список экземпляров отфильтрованных вакансий
     """
@@ -113,6 +120,7 @@ def get_filtered_vacancies(vacancies: list) -> list:
 def print_per_page(key, job_list):
     """
     Вывод вакансий на страницу
+
     :param key: Ключ вакансии
     :param job_list: Список вакансий
     """
@@ -125,3 +133,37 @@ def print_per_page(key, job_list):
 
     for i in range(per_page):
         print(job_list[i])
+
+
+def insert_hh_vacancies(api, saver) -> None:
+    """
+    Получает список с данными вакансий из HeadHunter,
+    забирает необходимые данные и сохраняет в файл в необходимом формате
+
+    :param api: API для работы с HeadHunter
+    :param saver: Класс для работы с данными вакансий в файле
+    """
+    # Получаем "сырые" данные вакансий
+    raw_hh_vacancies = api.get_response()["items"]
+
+    # Форматируем данные вакансий и сохраняем в файл
+    for raw_vacancy in raw_hh_vacancies:
+        vacancy = get_hh_vacancies_params(raw_vacancy)
+        saver.insert(vacancy)
+
+
+def insert_sj_vacancies(api, saver) -> None:
+    """
+    Получает список с данными вакансий из SuperJob,
+    забирает необходимые данные и сохраняет в файл в необходимом формате
+
+    :param api: API для работы с SuperJob
+    :param saver: Класс для работы с данными вакансий в файле
+    """
+    # Получаем "сырые" данные вакансий
+    raw_sj_vacancies = api.get_response()["objects"]
+
+    # Форматируем данные вакансий и сохраняем в файл
+    for raw_vacancy in raw_sj_vacancies:
+        vacancy = get_sj_vacancies_params(raw_vacancy)
+        saver.insert(vacancy)
