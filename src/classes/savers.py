@@ -29,6 +29,7 @@ class JSONSaver(Saver):
     def __init__(self, path):
         """
         Конструктор класса
+
         :param path: путь к файлу
         """
         self.__path = path
@@ -43,6 +44,7 @@ class JSONSaver(Saver):
     def insert(self, params: list):
         """
         Добавление вакансий в файл
+
         :param params: отформатированные данные в вакансии
         """
 
@@ -56,11 +58,14 @@ class JSONSaver(Saver):
                 "Требуемый опыт",
                 "Тип занятости"]
 
-        # Создание словаря вакансий
+        # Создание словаря вакансий. В случае отсутствия вакансий согласно запросу (пустой список параметров)
+        # создается пустой словарь
         vacancy_dict = dict(zip(keys, params))
 
         data = self.get_vacancies()
-
+        # В случае появления пустого словаря данных вакансии метод завершает работу
+        if len(vacancy_dict) == 0:
+            return
         # Добавление вакансии в файл
         with open(self.__path, 'w', encoding="utf-8") as f:
             data.append(vacancy_dict)
@@ -69,6 +74,7 @@ class JSONSaver(Saver):
     def get_vacancies(self, keyword=""):
         """
         Получение вакансий из файла
+
         :param keyword: ключевое слово для поиска вакансий
         :return: список данных вакансий
         """
@@ -92,6 +98,7 @@ class JSONSaver(Saver):
     def delete(chosen_vacancies, keyword=""):
         """
         Удаление вакансий, содержащих в значениях ключ, из файла
+
         :param chosen_vacancies: список выбранных вакансий
         :param keyword: ключевое слово для удаления вакансий
         :return: список данных вакансий
