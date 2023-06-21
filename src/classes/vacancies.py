@@ -9,6 +9,7 @@ class Vacancy:
                  published: str, experience: str, employment: str) -> None:
         """
         Инициализация объекта Vacancy.
+
         :param vacancy_name: Название вакансии
         :param salary: Сумма зарплаты
         :param currency: Валюта
@@ -32,6 +33,7 @@ class Vacancy:
     def __str__(self) -> str:
         """
         Возвращает строковое представление класса для пользователя
+
         :return: строковое представление класса
         """
         return f"\nДата публикации: {self.published}, город {self.location}\n" \
@@ -43,6 +45,7 @@ class Vacancy:
     def __repr__(self) -> str:
         """
         Возвращает строковое представление класса для разработчика
+
         :return: строковое представление класса
         """
         return f"{self.__class__.__name__}.({self.__slots__})"
@@ -50,6 +53,7 @@ class Vacancy:
     def __gt__(self, other: 'Vacancy') -> bool:
         """
         Возвращает True, если зарплата вакансии больше зарплаты другой вакансии
+
         :param other: другая вакансия
         :return: True, если вакансия больше другой
         """
@@ -58,6 +62,7 @@ class Vacancy:
     def __lt__(self, other: 'Vacancy') -> bool:
         """
         Возвращает True, если зарплата вакансии меньше зарплаты другой вакансии
+
         :param other: другая вакансия
         :return: True, если вакансия меньше другой
         """

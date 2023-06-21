@@ -9,7 +9,7 @@ class API(ABC):
     """
 
     @abstractmethod
-    def get_vacancies(self) -> list:
+    def get_response(self) -> list:
         """
         Возвращает список вакансий
         :return: список вакансий
@@ -44,7 +44,7 @@ class HeadHunterAPI(API):
         """
         return "HeadHunter API"
 
-    def get_vacancies(self) -> dict:
+    def get_response(self) -> dict:
         """
         Возвращает список вакансий по заданному ключу
         :return: список вакансий
@@ -64,6 +64,7 @@ class SuperJobAPI(API):
     def __init__(self, keyword: str) -> None:
         """
         Инициализация класса по заданному ключу
+
         :param keyword: Ключ для поиска вакансий SuperJob
         """
         self.__url = "https://api.superjob.ru/2.0/vacancies/"
@@ -73,6 +74,7 @@ class SuperJobAPI(API):
     def __repr__(self) -> str:
         """
         Возвращает строковое представление класса для разработчика
+
         :return: строковое представление класса
         """
         return f"{self.__class__.__name__}()"
@@ -80,13 +82,15 @@ class SuperJobAPI(API):
     def __str__(self) -> str:
         """
         Возвращает строковое представление класса для пользователя
+
         :return: строковое представление класса
         """
         return "SuperJob API"
 
-    def get_vacancies(self) -> dict:
+    def get_response(self) -> dict:
         """
         Возвращает список вакансий по заданному ключу
+
         :return: список вакансий
         """
         response = requests.get(f"{self.__url}",
